@@ -31,11 +31,12 @@ When a user asks a question:
 6. **Convergence**: Agent either answers the question or hits the iteration limit
 7. **Result Return**: Streamlit displays the answer, SQL query, and results table
 
-**Read Operation** (Default):
+**Read Operation**:
+- Agent calls `execute_query()` for read operation
 - Python checks for `SELECT` before executing via `execute_query()` so all write are blocked in this tool execution. 
 
-**Write Operations** (HITL):
-- Agent calls `request_modification()` → LangGraph `interrupt()` pauses the graph
+**Write Operations** (Human In The Loop Safety):
+- Agent calls `request_modification()` before any write operation → LangGraph `interrupt()` pauses the graph
 - API waits for user approval via `POST /hitl/respond`
 - User reviews the proposed SQL and reason, then approves or denies
 - Only after approval does `execute_write()` execute the statement
