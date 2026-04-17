@@ -15,6 +15,45 @@ This agent enables non-technical users to analyze e-commerce transaction data by
 - **Rich UI**: Streamlit frontend with quick-start questions, table statistics, and formatted results
 - **Real E-commerce Data**: UCI Online Retail II dataset with ~1 million transactions from 2009–2011
 
+---
+
+## How It Works
+
+### 1. Agent Workflow
+
+When a user asks a question:
+
+1. **Initialization**: Streamlit sends the message to FastAPI `/chat` endpoint
+2. **Graph Execution**: LangGraph invokes the agent with the message added to state
+3. **LLM Reasoning**: The LLM reads the system prompt (with pre-loaded schema) and decides which tools to call
+4. **Tool Calls**: Agent executes tools in sequence (list_tables, get_schema, execute_query, etc.)
+5. **Iteration**: After each tool result, the agent checks if it has enough info; if not, loops
+6. **Convergence**: Agent either answers the question or hits the iteration limit
+7. **Result Return**: Streamlit displays the answer, SQL query, and results table
+
+### 2. Safety Layers (Defence in Depth)
+
+**Read-Only Mode** (Default):
+- PostgreSQL user `analyst` has only `SELECT` privilege
+- Python checks for `SELECT` before executing via `execute_query()`
+- All writes are blocked at the DB level
+
+**Write Operations** (HITL):
+- Agent calls `request_modification()` → LangGraph `interrupt()` pauses the graph
+- API waits for user approval via `POST /hitl/respond`
+- User reviews the proposed SQL and reason, then approves or denies
+- Only after approval does `execute_write()` execute the statement
+- Transactions are atomic; if the query fails, no partial state is committed
+
+### 3. State Management & Checkpointing
+
+- **Thread ID**: Each conversation has a unique UUID
+- **PostgresSaver**: LangGraph checkpoint backend stores graph state in PostgreSQL
+- **Message History**: Full conversation stored in agentstate.messages
+- **Context Window**: Only the last `MESSAGE_WINDOW` messages sent to the LLM (reduces token usage)
+
+---
+
 ## Architecture
 
 ```
@@ -372,43 +411,6 @@ text-to-sql-agent/
 ├── .env.example         # Template environment variables
 └── .gitignore           # Git exclusion rules
 ```
-
----
-
-## How It Works
-
-### 1. Agent Workflow
-
-When a user asks a question:
-
-1. **Initialization**: Streamlit sends the message to FastAPI `/chat` endpoint
-2. **Graph Execution**: LangGraph invokes the agent with the message added to state
-3. **LLM Reasoning**: The LLM reads the system prompt (with pre-loaded schema) and decides which tools to call
-4. **Tool Calls**: Agent executes tools in sequence (list_tables, get_schema, execute_query, etc.)
-5. **Iteration**: After each tool result, the agent checks if it has enough info; if not, loops
-6. **Convergence**: Agent either answers the question or hits the iteration limit
-7. **Result Return**: Streamlit displays the answer, SQL query, and results table
-
-### 2. Safety Layers (Defence in Depth)
-
-**Read-Only Mode** (Default):
-- PostgreSQL user `analyst` has only `SELECT` privilege
-- Python checks for `SELECT` before executing via `execute_query()`
-- All writes are blocked at the DB level
-
-**Write Operations** (HITL):
-- Agent calls `request_modification()` → LangGraph `interrupt()` pauses the graph
-- API waits for user approval via `POST /hitl/respond`
-- User reviews the proposed SQL and reason, then approves or denies
-- Only after approval does `execute_write()` execute the statement
-- Transactions are atomic; if the query fails, no partial state is committed
-
-### 3. State Management & Checkpointing
-
-- **Thread ID**: Each conversation has a unique UUID
-- **PostgresSaver**: LangGraph checkpoint backend stores graph state in PostgreSQL
-- **Message History**: Full conversation stored in agentstate.messages
-- **Context Window**: Only the last `MESSAGE_WINDOW` messages sent to the LLM (reduces token usage)
 
 ---
 
