@@ -1,6 +1,6 @@
 # Text-to-SQL Agent
 
-A production-ready SQL data analyst agent that converts natural language questions into SQL queries and executes them against a PostgreSQL database. Built on LangGraph with a ReAct (Reasoning + Acting) loop pattern.
+A SQL data analyst agent that converts natural language questions into SQL queries and executes them against a PostgreSQL database. Built on LangGraph with a ReAct (Reasoning + Acting) loop pattern.
 
 ## Overview
 
