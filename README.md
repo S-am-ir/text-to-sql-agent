@@ -31,8 +31,6 @@ When a user asks a question:
 6. **Convergence**: Agent either answers the question or hits the iteration limit
 7. **Result Return**: Streamlit displays the answer, SQL query, and results table
 
-### 2. Safety Layers (Defence in Depth)
-
 **Read-Only Mode** (Default):
 - PostgreSQL user `analyst` has only `SELECT` privilege
 - Python checks for `SELECT` before executing via `execute_query()`
