@@ -1,0 +1,72 @@
+services:
+
+  # ── PostgreSQL ──────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: sql_analyst_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     ${POSTGRES_USER:-analyst}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-analyst_pass}
+      POSTGRES_DB:       ${POSTGRES_DB:-retail_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-analyst} -d ${POSTGRES_DB:-retail_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # ── FastAPI backend ─────────────────────────────────────────────────────────
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sql_analyst_api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL:   postgresql+psycopg://${POSTGRES_USER:-analyst}:${POSTGRES_PASSWORD:-analyst_pass}@postgres:5432/${POSTGRES_DB:-retail_db}
+      GROQ_API_KEY:   ${GROQ_API_KEY}
+      PRIMARY_MODEL:  ${PRIMARY_MODEL:-qwen/qwen3-32b}
+      ANALYST_MODEL:  ${ANALYST_MODEL:-openai/gpt-oss-120b}
+      MAX_ITERATIONS: ${MAX_ITERATIONS:-10}
+      MESSAGE_WINDOW: ${MESSAGE_WINDOW:-10}
+    ports:
+      - "8000:8000"
+    volumes:
+      - retail_data:/tmp/retail_data
+    command: >
+      sh -c "python -m db.seed --check &&
+             uvicorn api.main:app --host 0.0.0.0 --port 8000"
+
+  # ── Streamlit frontend ──────────────────────────────────────────────────────
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sql_analyst_app
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      BACKEND_URL:    http://api:8000
+      DATABASE_URL:   postgresql+psycopg://${POSTGRES_USER:-analyst}:${POSTGRES_PASSWORD:-analyst_pass}@postgres:5432/${POSTGRES_DB:-retail_db}
+      GROQ_API_KEY:   ${GROQ_API_KEY}
+      PRIMARY_MODEL:  ${PRIMARY_MODEL:-qwen/qwen3-32b}
+    ports:
+      - "8501:8501"
+    command: >
+      streamlit run ui/app.py
+      --server.port=8501
+      --server.address=0.0.0.0
+      --server.headless=true
+      --browser.gatherUsageStats=false
+
+volumes:
+  postgres_data:
+  retail_data:

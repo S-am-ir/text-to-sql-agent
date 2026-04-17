@@ -1,0 +1,32 @@
+# Orchestration
+langgraph>=0.2.0
+langchain-core>=0.3.0
+langchain-groq>=1.1.0
+langchain-community>=0.3.0
+
+# Backend API
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+httpx>=0.27.0
+
+langgraph-checkpoint-postgres
+
+# Database — psycopg3 for PostgresSaver + SQLAlchemy for SQLDatabase
+psycopg[binary,pool]>=3.1.0
+sqlalchemy>=2.0.0
+
+# Validation & config
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+
+# UI & charts
+streamlit>=1.35.0
+plotly>=5.22.0
+
+# Data ingestion (seed script)
+pandas>=2.1.0
+openpyxl>=3.1.0
+requests>=2.31.0
+
+# Utilities
+python-dotenv>=1.0.0

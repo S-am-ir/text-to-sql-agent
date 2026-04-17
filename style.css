@@ -1,0 +1,301 @@
+
+/* ──────────────────────────────────────────────────────────────────────────
+   SQL Data Analyst — UI Stylesheet
+   Clean, professional light theme. No dark mode.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Google Fonts — Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* ── Global ─────────────────────────────────────────────────────────────── */
+
+html, body, [class*="css"] {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    color: #1A1A2E;
+}
+
+/* Remove default Streamlit padding */
+.block-container {
+    padding-top: 1.5rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 1100px !important;
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
+
+.app-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 0 1rem 0;
+    border-bottom: 1.5px solid #E5E9F0;
+    margin-bottom: 1.2rem;
+}
+
+.app-header h1 {
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #1A1A2E;
+    margin: 0;
+}
+
+.app-header .subtitle {
+    font-size: 0.82rem;
+    color: #6B7280;
+    margin-top: 2px;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────────────── */
+
+section[data-testid="stSidebar"] {
+    background: #F7F9FC !important;
+    border-right: 1px solid #E5E9F0;
+}
+
+section[data-testid="stSidebar"] .block-container {
+    padding: 1.2rem 1rem !important;
+}
+
+.sidebar-section-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #9CA3AF;
+    margin: 1rem 0 0.4rem 0;
+}
+
+.table-badge {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 10px;
+    background: white;
+    border: 1px solid #E5E9F0;
+    border-radius: 6px;
+    margin-bottom: 5px;
+    font-size: 0.82rem;
+}
+
+.table-badge .table-name {
+    font-weight: 500;
+    color: #2D3142;
+}
+
+.table-badge .row-count {
+    font-size: 0.75rem;
+    color: #9CA3AF;
+}
+
+.quick-q-btn {
+    width: 100%;
+    text-align: left;
+    background: white;
+    border: 1px solid #E5E9F0;
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 0.8rem;
+    color: #374151;
+    cursor: pointer;
+    margin-bottom: 4px;
+    transition: border-color 0.15s, background 0.15s;
+}
+
+.quick-q-btn:hover {
+    border-color: #4F86C6;
+    background: #F0F6FF;
+    color: #1A4B8A;
+}
+
+/* ── Chat messages ───────────────────────────────────────────────────────── */
+
+.chat-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-bottom: 1.2rem;
+}
+
+/* User bubble */
+.user-message {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.user-bubble {
+    background: #4F86C6;
+    color: white;
+    border-radius: 16px 16px 4px 16px;
+    padding: 10px 16px;
+    max-width: 72%;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-shadow: 0 1px 3px rgba(79, 134, 198, 0.2);
+}
+
+/* Agent bubble */
+.agent-message {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.agent-avatar {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(135deg, #4F86C6, #5E9B8A);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: white;
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.agent-bubble {
+    background: #FFFFFF;
+    border: 1px solid #E5E9F0;
+    border-radius: 4px 16px 16px 16px;
+    padding: 12px 16px;
+    max-width: 85%;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+}
+
+.agent-bubble p { margin-bottom: 0.5rem; }
+.agent-bubble p:last-child { margin-bottom: 0; }
+
+.agent-bubble strong { color: #1A1A2E; }
+
+/* ── SQL expander ────────────────────────────────────────────────────────── */
+
+.sql-block {
+    background: #F8F9FB;
+    border: 1px solid #E5E9F0;
+    border-left: 3px solid #4F86C6;
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    margin: 8px 0 4px 0;
+}
+
+.sql-block code, .sql-block pre {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace !important;
+    font-size: 0.8rem;
+    color: #2D3142;
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 0;
+    background: transparent;
+}
+
+.sql-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #4F86C6;
+    margin-bottom: 6px;
+}
+
+/* ── HITL confirmation card ──────────────────────────────────────────────── */
+
+.hitl-card {
+    background: #FFFBF0;
+    border: 1.5px solid #F5C443;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 8px 0;
+}
+
+.hitl-card .hitl-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #92610A;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.hitl-card .hitl-reason {
+    font-size: 0.83rem;
+    color: #4B5563;
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+/* ── Input area ──────────────────────────────────────────────────────────── */
+
+div[data-testid="stChatInput"] {
+    border: 1.5px solid #D1D9E6 !important;
+    border-radius: 12px !important;
+    background: white !important;
+    padding: 4px !important;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.05) !important;
+    transition: border-color 0.2s !important;
+}
+
+div[data-testid="stChatInput"]:focus-within {
+    border-color: #4F86C6 !important;
+    box-shadow: 0 0 0 3px rgba(79,134,198,0.12) !important;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+button[kind="primary"] {
+    background: #4F86C6 !important;
+    border: none !important;
+    border-radius: 8px !important;
+    font-weight: 500 !important;
+}
+
+button[kind="secondary"] {
+    border-radius: 8px !important;
+    border-color: #D1D9E6 !important;
+}
+
+/* ── Expanders ───────────────────────────────────────────────────────────── */
+
+[data-testid="stExpander"] {
+    border: 1px solid #E5E9F0 !important;
+    border-radius: 8px !important;
+    overflow: hidden;
+}
+
+[data-testid="stExpander"] summary {
+    font-size: 0.82rem !important;
+    font-weight: 500 !important;
+    color: #6B7280 !important;
+    padding: 8px 12px !important;
+    background: #F8F9FB !important;
+}
+
+/* ── Plotly charts ───────────────────────────────────────────────────────── */
+
+.stPlotlyChart {
+    border: 1px solid #E5E9F0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 8px 0;
+}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+
+hr {
+    border: none;
+    border-top: 1px solid #E5E9F0;
+    margin: 0.8rem 0;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D1D9E6; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #B0BEC5; }
+
